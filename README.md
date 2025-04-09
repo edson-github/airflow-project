@@ -5,7 +5,7 @@ Este projeto é um ambiente de aprendizado para engenharia de dados utilizando o
 ## 🚀 Visão Geral
 
 O projeto demonstra como:
-- Configurar um ambiente local do Airflow
+- Configurar um ambiente local do Airflow com Docker Compose
 - Criar DAGs (Directed Acyclic Graphs) para orquestração de tarefas
 - Implementar operadores básicos do Airflow
 - Gerenciar dependências entre tarefas
@@ -17,6 +17,39 @@ O projeto demonstra como:
 - Docker e Docker Compose
 - Git
 
+## ⚠️ Notas Importantes Antes de Rodar
+
+1. **Inicialização do Banco de Dados do Airflow**
+
+   Antes de iniciar os containers, é necessário rodar o comando abaixo para inicializar o banco de dados do Airflow:
+
+   ```bash
+   docker compose run --rm webserver airflow db migrate
+   ```
+
+2. **Chave Fernet**
+
+   Certifique-se de que a variável `AIRFLOW__CORE__FERNET_KEY` está definida corretamente no `.env` ou no `docker-compose.yml`, com uma chave válida de 32 bytes codificada em base64. Você pode gerar uma chave com o seguinte comando Python:
+
+   ```python
+   from cryptography.fernet import Fernet
+   print(Fernet.generate_key().decode())
+   ```
+
+3. **Criação de Usuário Admin**
+
+   Após a inicialização do banco, crie um usuário para acesso à interface web:
+
+   ```bash
+   docker compose run --rm webserver airflow users create \
+     --username admin \
+     --firstname Admin \
+     --lastname User \
+     --role Admin \
+     --email admin@example.com \
+     --password admin
+   ```
+
 ## 🛠️ Instalação
 
 1. Clone o repositório:
@@ -27,15 +60,15 @@ cd airflow-project
 
 2. Inicie o ambiente Airflow usando Docker Compose:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 3. Acesse a interface web do Airflow:
 ```
 http://localhost:8080
 ```
-- Usuário: airflow
-- Senha: airflow
+- Usuário: admin
+- Senha: admin
 
 ## 📁 Estrutura do Projeto
 
@@ -45,7 +78,8 @@ airflow-project/
 ├── plugins/                 # Plugins personalizados
 ├── data/                    # Dados de exemplo
 ├── docker-compose.yml       # Configuração do Docker
-└── README.md               # Este arquivo
+├── .env                     # Variáveis de ambiente, incluindo a Fernet Key
+└── README.md                # Este arquivo
 ```
 
 ## 📚 Exemplos Incluídos
@@ -80,3 +114,8 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 ## 📞 Suporte
 
 Para dúvidas ou sugestões, abra uma issue no repositório.
+```
+
+---
+
+Se quiser, posso te ajudar a atualizar o arquivo no repositório diretamente (via terminal ou GitHub). Deseja que eu também atualize o `.env.example` com a variável `FERNET_KEY` e outras sugestões.
