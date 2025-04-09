@@ -19,7 +19,7 @@ with DAG(
     'hello_world',
     default_args=default_args,
     description='Uma DAG simples de exemplo',
-    schedule_interval=timedelta(days=1),
+    schedule=timedelta(days=1),
     start_date=datetime(2024, 1, 1),
     catchup=False,
     tags=['exemplo'],
